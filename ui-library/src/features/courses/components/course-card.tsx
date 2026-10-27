@@ -51,13 +51,16 @@ export function CourseCard({
           <p className="text-xs font-semibold tracking-wide uppercase">
             {courseCode}
           </p>
-          {isSelected ? (
-            <span className="badge badge-accent badge-sm shrink-0">
-              Seleccionada
+          <div className="flex shrink-0 flex-wrap justify-end gap-1">
+            {isSelected ? (
+              <span className="badge badge-accent badge-sm">Seleccionada</span>
+            ) : null}
+            <span className="badge badge-outline badge-sm border-primary-content text-primary-content">
+              {formatCredits(credits)} créditos
             </span>
-          ) : null}
+          </div>
         </div>
-        <h3 className="text-lg font-bold wrap-break-word">{title}</h3>
+        <h3 className="card-title text-lg wrap-break-word">{title}</h3>
       </header>
 
       <div className="card-body gap-4">
@@ -66,8 +69,6 @@ export function CourseCard({
           <dd className="min-w-0 wrap-break-word">{instructor}</dd>
           <dt className="font-semibold">Salón</dt>
           <dd className="min-w-0 wrap-break-word">{room}</dd>
-          <dt className="font-semibold">Créditos</dt>
-          <dd>{formatCredits(credits)}</dd>
         </dl>
 
         <div className="flex flex-col gap-1">
@@ -89,12 +90,12 @@ export function CourseCard({
             className="btn btn-primary btn-sm"
             onClick={onLinkClick}
           >
-            Ir al aula
+            Entrar al Aula
           </Link>
           {syllabusUrl ? (
             <Link
               href={syllabusUrl}
-              className="btn btn-outline btn-primary btn-sm"
+              className="btn btn-ghost btn-sm"
               onClick={onLinkClick}
             >
               Ver programa
@@ -107,7 +108,7 @@ export function CourseCard({
             {onViewDetails ? (
               <button
                 type="button"
-                className="btn btn-ghost btn-sm"
+                className="btn btn-ghost btn-xs"
                 onClick={onViewDetails}
               >
                 Ver detalle
@@ -116,7 +117,7 @@ export function CourseCard({
             {onToggleSelect ? (
               <button
                 type="button"
-                className={`btn btn-sm ${
+                className={`btn btn-xs ${
                   isSelected ? 'btn-secondary' : 'btn-outline btn-secondary'
                 }`}
                 aria-pressed={isSelected}

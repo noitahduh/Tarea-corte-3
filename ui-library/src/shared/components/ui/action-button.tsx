@@ -1,18 +1,16 @@
-import type { ReactNode } from 'react';
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
 export type ActionButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 export type ActionButtonSize = 'sm' | 'md' | 'lg';
 
-export interface ActionButtonProps {
+export interface ActionButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   icon?: ReactNode;
   badgeText?: string;
   isLoading?: boolean;
   variant?: ActionButtonVariant;
   size?: ActionButtonSize;
-  disabled?: boolean;
-  type?: 'button' | 'submit' | 'reset';
-  onClick?: () => void;
 }
 
 const variantClasses: Record<ActionButtonVariant, string> = {
@@ -35,23 +33,27 @@ export function ActionButton({
   isLoading = false,
   variant = 'primary',
   size = 'md',
-  disabled = false,
   type = 'button',
-  onClick,
+  disabled,
+  className = '',
+  ...rest
 }: ActionButtonProps) {
   const badgeClass =
     variant === 'secondary' ? 'badge-accent' : 'badge-secondary';
 
   return (
     <button
+      {...rest}
       type={type}
-      className={`btn max-w-full ${variantClasses[variant]} ${sizeClasses[size]}`}
+      className={`btn max-w-full ${variantClasses[variant]} ${sizeClasses[size]} ${className}`.trim()}
       disabled={disabled || isLoading}
       aria-busy={isLoading}
-      onClick={onClick}
     >
       {isLoading ? (
-        <span className="loading loading-spinner" aria-hidden="true" />
+        <span
+          className="loading loading-spinner loading-xs"
+          aria-hidden="true"
+        />
       ) : (
         icon
       )}

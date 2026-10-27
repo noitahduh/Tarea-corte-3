@@ -1,20 +1,14 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
-import { useId, useRef, useState } from 'react';
-import type { KeyboardEvent } from 'react';
+import { NavbarUserMenu, type NavLinkItem } from './navbar-user-menu';
+
+export type { NavLinkItem };
 
 export interface UserSessionData {
   name: string;
   avatarUrl: string;
   notificationsCount: number;
   currentTerm: string;
-}
-
-export interface NavLinkItem {
-  label: string;
-  href: string;
 }
 
 export interface AcademicAppNavbarProps {
@@ -47,7 +41,7 @@ function BellIcon() {
       fill="none"
       stroke="currentColor"
       strokeWidth={2}
-      className="h-6 w-6"
+      className="size-6"
       aria-hidden="true"
     >
       <path
@@ -65,28 +59,17 @@ export function AcademicAppNavbar({
   links = [],
   onNotificationsClick,
 }: AcademicAppNavbarProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const toggleRef = useRef<HTMLButtonElement>(null);
-  const menuId = useId();
-
   const count = normalizeCount(user.notificationsCount);
   const countText = count > 99 ? '99+' : String(count);
   const notificationsLabel =
     count === 1 ? '1 notificación sin leer' : `${count} notificaciones sin leer`;
   const hasImage = user.avatarUrl.trim() !== '';
 
-  function handleKeyDown(event: KeyboardEvent<HTMLElement>) {
-    if (event.key === 'Escape' && isMenuOpen) {
-      setIsMenuOpen(false);
-      toggleRef.current?.focus();
-    }
-  }
-
-  const notificationsContent = (
+  const bell = (
     <span className="indicator">
       <BellIcon />
       {count > 0 ? (
-        <span className="indicator-item badge badge-secondary badge-xs">
+        <span className="indicator-item badge badge-xs badge-secondary">
           {countText}
         </span>
       ) : null}
@@ -94,62 +77,41 @@ export function AcademicAppNavbar({
   );
 
   return (
-    <header className="relative" onKeyDown={handleKeyDown}>
-      <div className="navbar bg-base-100 shadow-sm">
-        <div className="navbar-start min-w-0 gap-1">
-          {links.length > 0 ? (
-            <button
-              ref={toggleRef}
-              type="button"
-              className="btn btn-square btn-ghost lg:hidden"
-              aria-expanded={isMenuOpen}
-              aria-controls={menuId}
-              aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-              onClick={() => setIsMenuOpen((previous) => !previous)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                className="h-6 w-6"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d={isMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
-                />
-              </svg>
-            </button>
-          ) : null}
-
+    <header className="border-b border-base-300 bg-base-100">
+      <div className="navbar mx-auto max-w-5xl gap-2 px-2 sm:px-4">
+        <div className="navbar-start min-w-0 flex-1">
           <Link
             href="/"
-            className="btn btn-ghost min-w-0 px-2 text-lg font-bold text-primary"
+            className="flex min-w-0 items-center gap-2 rounded-field p-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
-            <span className="truncate">{brandName}</span>
+            <span
+              className="grid size-10 shrink-0 place-items-center rounded-field bg-primary text-lg font-bold text-primary-content"
+              aria-hidden="true"
+            >
+              {getInitials(brandName).charAt(0)}
+            </span>
+            <span className="flex min-w-0 flex-col leading-tight">
+              <span className="truncate font-bold text-primary">{brandName}</span>
+              <span className="truncate text-xs text-base-content/70">
+                Periodo {user.currentTerm}
+              </span>
+            </span>
           </Link>
-
-          {links.length > 0 ? (
-            <nav aria-label="Principal" className="hidden lg:block">
-              <ul className="menu menu-horizontal px-1">
-                {links.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href}>{link.label}</Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ) : null}
         </div>
 
-        <div className="navbar-end gap-2">
-          <span className="badge badge-accent hidden md:inline-flex">
-            {user.currentTerm}
-          </span>
+        {links.length > 0 ? (
+          <nav aria-label="Secciones" className="navbar-center hidden lg:flex">
+            <ul className="menu menu-horizontal gap-1 px-1">
+              {links.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href}>{link.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ) : null}
 
+        <div className="navbar-end w-auto shrink-0 gap-1">
           {onNotificationsClick ? (
             <button
               type="button"
@@ -157,57 +119,39 @@ export function AcademicAppNavbar({
               aria-label={notificationsLabel}
               onClick={onNotificationsClick}
             >
-              {notificationsContent}
+              {bell}
             </button>
           ) : (
             <span
               role="img"
               aria-label={notificationsLabel}
-              className="flex h-10 w-10 items-center justify-center"
+              className="grid size-10 place-items-center"
             >
-              {notificationsContent}
+              {bell}
             </span>
           )}
 
-          <div className="flex items-center gap-2">
-            <div
-              className={`avatar avatar-online ${hasImage ? '' : 'avatar-placeholder'}`}
-            >
-              <div className="w-9 rounded-full bg-neutral text-neutral-content">
+          <NavbarUserMenu
+            label={`Menú de ${user.name}`}
+            userName={user.name}
+            currentTerm={user.currentTerm}
+            links={links}
+          >
+            <span className="avatar avatar-online">
+              <span className="flex aspect-square w-9 items-center justify-center overflow-hidden rounded-full bg-neutral text-neutral-content">
                 {hasImage ? (
                   <Image src={user.avatarUrl} alt="" width={36} height={36} />
                 ) : (
-                  <span className="text-sm" aria-hidden="true">
-                    {getInitials(user.name)}
-                  </span>
+                  <span className="text-sm">{getInitials(user.name)}</span>
                 )}
-              </div>
-            </div>
-            <span className="sr-only text-sm font-medium md:not-sr-only md:max-w-32 md:truncate">
+              </span>
+            </span>
+            <span className="hidden max-w-40 truncate text-sm font-medium md:inline">
               {user.name}
             </span>
-          </div>
+          </NavbarUserMenu>
         </div>
       </div>
-
-      {links.length > 0 && isMenuOpen ? (
-        <nav
-          id={menuId}
-          aria-label="Principal"
-          className="absolute inset-x-0 top-full z-40 border-b border-base-300 bg-base-100 shadow-lg lg:hidden"
-        >
-          <ul className="menu w-full p-2">
-            <li className="menu-title">Periodo {user.currentTerm}</li>
-            {links.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} onClick={() => setIsMenuOpen(false)}>
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      ) : null}
     </header>
   );
 }

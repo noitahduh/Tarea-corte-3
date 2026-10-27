@@ -32,6 +32,7 @@ export function SubmissionConfirmModal({
     }
   }, [isOpen]);
 
+
   function handleClose() {
     if (isOpen) onCancel();
   }
