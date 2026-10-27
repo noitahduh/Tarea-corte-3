@@ -2,7 +2,7 @@ export interface StepItem {
   label: string;
   isCompleted: boolean;
   isCurrent?: boolean;
-  stepNumber?: number;
+  stepNumber?: number | string;
 }
 
 export interface StepProgressTrackerProps {

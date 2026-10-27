@@ -38,13 +38,13 @@ export function RatingDisplay({
           <div
             key={`${index}-a`}
             className={`mask mask-star-2 mask-half-1 ${
-              index * 2 < halves ? 'bg-warning' : 'bg-base-300'
+              index * 2 < halves ? 'bg-warning opacity-100' : ''
             }`}
           />,
           <div
             key={`${index}-b`}
             className={`mask mask-star-2 mask-half-2 ${
-              index * 2 + 1 < halves ? 'bg-warning' : 'bg-base-300'
+              index * 2 + 1 < halves ? 'bg-warning opacity-100' : ''
             }`}
           />,
         ])}

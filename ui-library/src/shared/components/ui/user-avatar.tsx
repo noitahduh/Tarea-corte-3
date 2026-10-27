@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { getInitials } from '@/shared/lib/get-initials';
 
 export type UserAvatarSize = 'sm' | 'md' | 'lg';
 
@@ -20,17 +21,6 @@ const sizeConfig: Record<
   md: { box: 'w-16', px: 64, text: 'text-xl' },
   lg: { box: 'w-24', px: 96, text: 'text-3xl' },
 };
-
-function getInitials(name: string): string {
-  const letters = name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join('');
-  return letters || '?';
-}
 
 export function UserAvatar({
   name,
@@ -57,7 +47,12 @@ export function UserAvatar({
           }`}
         >
           {hasImage ? (
-            <Image src={avatarUrl} alt="" width={px} height={px} />
+            <Image
+              src={avatarUrl}
+              alt={`Fotografía de perfil de ${name}`}
+              width={px}
+              height={px}
+            />
           ) : (
             <span className={text} aria-hidden="true">
               {getInitials(name)}

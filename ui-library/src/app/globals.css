@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source inline("[--value:{0..99}]");
 
 @plugin "daisyui" {
   themes: icesi --default;

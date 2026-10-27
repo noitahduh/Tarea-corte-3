@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { getInitials } from '@/shared/lib/get-initials';
 import { NavbarUserMenu, type NavLinkItem } from './navbar-user-menu';
 
 export type { NavLinkItem };
@@ -16,17 +17,6 @@ export interface AcademicAppNavbarProps {
   user: UserSessionData;
   links?: NavLinkItem[];
   onNotificationsClick?: () => void;
-}
-
-function getInitials(name: string): string {
-  const letters = name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join('');
-  return letters || '?';
 }
 
 function normalizeCount(value: number): number {

@@ -42,7 +42,7 @@ export function MetricBentoStat({
             {icon}
           </span>
         </div>
-        <div className="stat-title">{title}</div>
+        <div className="stat-title whitespace-normal">{title}</div>
         <div className="stat-value text-primary">
           {value}
           {maxValue !== undefined ? (
@@ -53,8 +53,10 @@ export function MetricBentoStat({
           ) : null}
         </div>
         {trendText ? (
-          <div className="stat-desc mt-1">
-            <span className={`badge badge-sm ${trendClasses[trendType]}`}>
+          <div className="stat-desc mt-1 whitespace-normal">
+            <span
+              className={`badge badge-sm h-auto py-0.5 text-start ${trendClasses[trendType]}`}
+            >
               <span aria-hidden="true">{trendSymbols[trendType]}</span>
               {trendText}
             </span>
